@@ -1,0 +1,64 @@
+/* Convert Decimal Number to Binary using Array. Here both Positive and Negative number is handled. For negative No it will show the 2's Complement value. */
+//------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+package Bit_operator;
+
+import java.util.Scanner;
+
+public class Decimal_to_bit {
+	
+	public static void main(String []args) {
+		
+		Scanner sc= new Scanner(System.in);
+	    System.out.println("Print value of n:");
+	    int n = sc.nextInt();
+	    
+	    if(n>0)
+	    {
+	    	int[] answer=new int[32];
+		    int bit=0;
+		    int indx=31;
+		    while(indx>=0)
+		    {
+		    	bit=n&1;
+		    	answer[indx]=bit;
+		    	n=n>>1;
+		    	indx--;
+		    }
+		    for(int i=0;i<32;i++)
+		    	System.out.print(answer[i]);
+	    }
+	    else
+	    {
+	    	n=Math.abs(n);
+	    	int[] answer = new int[32];
+		    for(int indx=31;indx>=0;indx--)
+		    {
+		    	int bit = n&1;
+		    	if(bit==0)
+		    		answer[indx]=1;
+		    	else
+		    		answer[indx]=0;
+		    	n=n>>1;
+		    }
+		    int i=31;
+		    if(answer[i]==0)
+		    	answer[i]=1;
+		    else
+		    {
+		    	answer[i]=0;
+		    	while(answer[i-1]!=0)
+		    	{
+		    		answer[i-1]=0;
+		    		i--;
+		    	}
+		    	answer[i-1]=1;
+		    }
+		    System.out.println("Answer:");
+		    for(i=0;i<32;i++)
+		    	System.out.print(answer[i]);
+	    }
+	}	
+    
+    
+}
