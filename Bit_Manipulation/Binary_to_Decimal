@@ -1,0 +1,27 @@
+
+package Bit_operator;
+
+import java.util.Scanner;
+
+public class Binary_to_decimal {
+
+	public static void main(String []args) {
+		
+		Scanner sc= new Scanner(System.in);
+	    System.out.println("Print value of n:");
+	    int n = sc.nextInt();
+	    int ans=0;
+	    int indx=0;
+	    while(n!=0)
+	    {
+	    	int bit=n%10;
+	    	n=n/10;
+	    	if(bit==1)
+	    	{
+	    		ans+=Math.pow(2, indx);
+	    	}
+	    	indx++;
+	    }
+	    System.out.print(ans); 
+	}
+}
