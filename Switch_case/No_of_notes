@@ -1,0 +1,24 @@
+/* Find out the no of notes needed for a given amount*/
+//-------------------------------------------------------------------------------------------------------------------------
+
+package switch_operations;
+
+import java.util.Scanner;
+
+public class no_of_notes {
+	public static void main(String []args)
+	{
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter the amount:");
+		int n = sc.nextInt();
+		int[] currency = {2000,500,200,100,50,20,10,5,2,1};
+		for(int indx=0;indx<currency.length;indx++)
+		{
+			if((n/currency[indx])>0)
+			{
+				System.out.println("Notes of "+currency[indx]+": "+(n/currency[indx]));
+			}
+			n=n%currency[indx];
+		}
+	}
+}
