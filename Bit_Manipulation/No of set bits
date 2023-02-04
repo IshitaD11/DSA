@@ -1,0 +1,17 @@
+/* Find the no of set bits in an integer
+
+the number of set bits an integer has is the number of 1's present when written in binary
+
+Example: 11 => 01011 => No of 1's in the binary representation = 3  */
+//------------------------------------------------------------------------------------------------------------------
+
+ public int getSetBit (int n)
+    {
+        int count=0;
+        while(n!=0)
+        {
+            n = n & (n-1);
+            count++;
+        }
+        return count;
+    }
