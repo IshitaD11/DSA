@@ -1,0 +1,39 @@
+/* Coding Ninja - Intersection Of Two Sorted Arrays
+
+Find intersection of two arrays
+
+Example:
+Arr1 = 1 2 2 2 3 4
+Arr2 = 2 2 3 3
+
+Output: 2 2 3 */
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.util.* ;
+import java.io.*; 
+public class Solution
+{
+	public static ArrayList<Integer> findArrayIntersection(ArrayList<Integer> arr1, int n, ArrayList<Integer> arr2, int m)
+	{
+		// Write Your Code Here.
+		int i = 0;
+		int j = 0;
+		ArrayList<Integer> ans = new ArrayList<Integer>();
+		while(i<n && j<m)
+		{
+			int a1 = arr1.get(i);
+			int a2 = arr2.get(j);
+			if(a1>a2)
+				j++;
+			else if (a1<a2)
+				i++;
+			else if(a1 == a2)
+			{
+				ans.add(a1);
+				i++;j++;
+			}
+		}
+		return ans;
+	}
+}
+
