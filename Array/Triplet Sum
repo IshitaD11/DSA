@@ -1,0 +1,42 @@
+/* Coding Ninja - 3 Sum
+
+Given integer array 'arr' and number K. Find the 3 numbers present in array, which will sum up to K.
+The triplets should be unique and sorted in ascending order. */
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.util.* ;
+import java.io.*; 
+public class Solution {
+
+	public static ArrayList<ArrayList<Integer>> findTriplets(int[] arr, int n, int K)  {
+
+	    // Write your code here.
+		Arrays.sort(arr);
+		Set<ArrayList<Integer>> out = new HashSet<ArrayList<Integer>>();
+		int i ;
+		for(int x = 0 ;x<n;x++)
+		{
+			i=x+1;
+			int j=(n-1);
+			int sum = K-arr[x];
+			while(i<j)
+			{
+				if(sum==(arr[i]+arr[j]))
+				{
+					ArrayList<Integer> res = new ArrayList<Integer>();
+					res.add(arr[x]);
+					res.add(arr[i]);
+					res.add(arr[j]);
+					out.add(res);
+					i++;
+				}
+				else if (sum>(arr[i]+arr[j]))
+					i++;
+				else if (sum<(arr[i]+arr[j]))
+					j--;
+			}
+		}
+		ArrayList<ArrayList<Integer>> ans = new ArrayList<ArrayList<Integer>>(out);
+		return ans;
+	}
+}
