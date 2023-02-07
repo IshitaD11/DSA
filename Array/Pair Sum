@@ -1,0 +1,46 @@
+/* Coding Ninja - Pair Sum
+
+Given Array arr and integer s, return list of all pair of elements of arr, such that the sum of the elements are equal to s.
+The result should be sorted ascending order.
+
+Example:
+5 5
+1 2 3 4 5
+
+Output: 
+1 4
+2 3
+
+Explanation: 1+4=5 and 2+3=5 */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.util.* ;
+import java.io.*;
+import java.util.* ;
+import java.io.*;
+public class Solution{
+    public static List<int[]> pairSum(int[] arr, int s) {
+        // Write your code here.
+        Arrays.sort(arr);
+        ArrayList<int[]> list = new ArrayList<int[]>();
+        int len = arr.length;
+        for(int i = 0 ; i < len ; i++)
+        {
+            for(int j = (i+1) ; j<len;j++)
+            {
+                // System.out.println(arr[i]+":"+arr[j]);
+                if((arr[i]+arr[j]) == s)
+                {
+                    int[] result = new int[2];
+                    // System.out.println("Inside IF");
+                    result[0]=arr[i];
+                    result[1]=arr[j];
+                    Arrays.sort(result);
+                    // System.out.println("Result:"+result[0]+"-"+result[1]);
+                    list.add(result);
+                }    
+            }
+        }
+        return list;
+    }
+}
