@@ -1,0 +1,42 @@
+/* Coding Ninja - Sort 0 1 2
+
+Sort an array consist of 0,1,2s */
+//This is using Dutch Nation Flag (DNF) algorithm //
+
+import java.util.* ;
+import java.io.*; 
+public class Solution 
+{
+    public static void sort012(int[] arr)
+    {
+        //Write your code here
+        int len = arr.length;
+        int min =0 ,max =(len-1), mid=0;
+
+        while(mid<=max)
+        {
+            if(arr[mid]==0)
+            {
+                swap(arr,min,mid);
+                mid++;
+                min++;
+            }
+            else if(arr[mid]==2)
+            {
+                swap(arr,max,mid);
+                max--;
+            }
+            else if(arr[mid]==1)
+            {
+                mid++;
+            }    
+            
+        }
+    }
+    public static void swap(int[] arr,int a, int b)
+    {
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+}
