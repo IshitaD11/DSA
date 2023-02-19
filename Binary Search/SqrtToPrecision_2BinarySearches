@@ -1,0 +1,84 @@
+/* Square Root to a precision N, where first Binary search to find the integer part. 2nd binary search to find the precision 
+ >> Need to find better approch by removing the BigDecimal part for precision.
+ If N is number and M is precision
+ O(logN) + O(log(10^precision)) + o(BigDecimal) >> Here log is in base 2 */
+//-----------------------------------------------------------------------------------------------------------------------------
+
+package BinarySearch;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+public class Sqrt {
+	public static int intSqrt(int x) {
+        long s=0;
+        long e = (x);
+        long mid = s+(e-s)/2;
+        int ans=0;
+        while(s<=e)
+        {
+            long sqr = mid*mid;
+            if(sqr < x)
+            {
+                s=mid+1;
+                ans=(int)mid;
+            }
+            else if(sqr>x)
+            {
+                e=mid-1;
+            }
+            else if(sqr==x)
+                return (int)mid;
+            mid = s+(e-s)/2;
+        }
+        return ans;
+    }
+	
+	public static double morePrecision(int n, int prcn,int intsol)
+	{
+		
+		double factor = Math.pow(0.1, prcn);
+//		System.out.println("factor:"+factor);
+		String format = "%."+prcn+"f" ;
+		String fctr = String.format("%."+prcn+"f",factor);
+		System.out.println("fctr:"+fctr);
+		double s=intsol;
+		double e=(intsol+1)-factor;
+		double mid = s+(e-s)/2;
+		double ans = 0.0;
+		while(s<=e)
+		{
+			double sqrt = mid*mid;
+			if(sqrt > n)
+			{
+				e=mid-factor;
+			}
+			else if(sqrt<n)
+			{
+				s=mid+factor;
+				ans = mid;
+			}
+			else if(sqrt == n)
+				ans = mid;
+			mid = s+(e-s)/2;
+		}
+		BigDecimal bd = new BigDecimal(ans).setScale(prcn, RoundingMode.HALF_UP);
+		System.out.println("ans:"+bd.doubleValue());
+		return bd.doubleValue();
+	}
+	
+	public static void main (String []args)
+	{
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter the No:");
+		int n = sc.nextInt();
+		System.out.println("Enter Precision:");
+		int prcn = sc.nextInt();
+		int sqrtInt = intSqrt(n);
+		double sqrt = morePrecision(n,prcn,sqrtInt);
+		System.out.println("Ans:"+sqrt);
+	}
+
+}
