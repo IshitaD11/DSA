@@ -1,0 +1,43 @@
+/* CodingNinja - Allocate Books
+
+Problem Statement
+Given an array of integers A of size N and an integer B.
+
+The College library has N books. The ith book has A[i] number of pages.
+
+You have to allocate books to B number of students so that the maximum number of pages allocated to a student is minimum.
+
+A book will be allocated to exactly one student.
+Each student has to be allocated at least one book.
+Allotment should be in contiguous order, for example: A student cannot be allocated book 1 and book 3, skipping book 2.
+Calculate and return that minimum possible number.
+
+NOTE: Return -1 if a valid assignment is not possible.
+
+Detailed explanation ( Input/output format, Notes, Constraints, Images )
+Sample Input 1:
+4 2
+12 34 67 90
+Sample Output 1:
+113
+Explanation Of Sample Input 1:
+Let’s consider ‘n=4’ (number of books ) and ‘m=2’ (number of students)
+‘arr = { 12, 34, 67, 90 }’. And ‘m= 2’.
+All possible way to allocate the ‘4’ books in ‘2’ number of students is-
+
+12 | 34, 67, 90 - sum of all the pages of books which allocated to student 1 is ‘12’, and student two is ‘34+ 67+ 90 = 191’ so maximum is ‘max(12, 191)= 191’.
+12, 34 | 67, 90 - sum of all the pages of books which allocated to student 1 is ‘12+ 34 = 46’, and student two is ‘67+ 90 = 157’ so maximum is ‘max(46, 157)= 157’.
+12, 34, 67 | 90 - sum of all the pages of books which allocated to student 1 is ‘12+ 34 +67 = 113’, and student two is ‘90’ so maximum is ‘max(113, 90)= 113’.
+
+So possible maximum number of pages which allocated to a single student is { 191, 157, 113 } 
+But you have to return a minimum of this so return ‘min(191,157, 113) =113’.
+
+Hence answer is ‘113’.
+Sample Input 2:
+5 4
+25 46 28 49 24
+Sample Output 2:
+71  */
+//----------------------------------------------------------------------------------------------------------------------------------------------
+
+//Giving Java input error. Need to check
