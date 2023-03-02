@@ -1,0 +1,75 @@
+/* CodingNinja-CookingNinjas
+
+https://www.codingninjas.com/codestudio/problems/cooking-ninjas_1164174?source=youtube&campaign=love_babbar_codestudio2&utm_source=youtube&utm_medium=affiliate&utm_campaign=love_babbar_codestudio2&leftPanelTab=0
+
+N cooks, each take time given in ranks array. Cook i takes rank[i] time to cook dish1, 2*rank[i] time to cook dish 2, 3*rank[i] time to cook dish 3 and so on.
+Need to prepare M dishes. Find out the minimum time taken to prepare M dishes.
+Ranks is not a sorted array.
+
+Example: 
+
+N = 4
+ranks = [1,2,3,4]
+M=11 
+
+Solutions:
+Cook0 prepares 4 dishes. Total time for Cook0 = 1 + 2*1 + 3*1 + 4*1 = 10
+Cook1 prepares 3 dishes. Total time for cook1 = 2+2*2+3*2 = 12
+Cook2 prepares 2 dishes. Total time for Cook2 = 3+2*3 = 9
+Cook3 prepares 2 dishes. Total time for Cook2 = 4+2*4 = 12
+
+So time taken to prepare all 11 dishes are 12. */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.util.* ;
+import java.io.*; 
+public class Solution
+{
+    public static int minCookTime(ArrayList<Integer> rank, int m)
+    {
+        // Write your code here.
+        Collections.sort(rank);
+        int s=0;
+        int cooktime=0;
+        for(int i=1;i<=m;i++) //time taken to make m dish by the last cook is the worst time
+        {
+            cooktime+=rank.get(rank.size()-1)*i; 
+        }
+        int e=cooktime;
+        int mid=s+(e-s)/2;
+        int ans=0;
+        while(s<=e)
+        {
+            if(isPossible(rank,m,mid))
+            {
+                ans=mid;
+                e=mid-1;
+            }
+            else
+                s=mid+1;
+            mid=s+(e-s)/2;
+        }
+        return ans;
+    }
+    public static boolean isPossible(ArrayList<Integer> rank, int m, int mid)
+    {
+        int time = 0;
+        int dish = 0;
+        int cnt = 1;
+        for(int i=0;i<rank.size();i++)
+        {
+            cnt=1;
+            time=0;
+            while(cnt*rank.get(i)+time<=mid)
+            {
+                time+=cnt*rank.get(i);
+                cnt++;
+                dish++;
+                if(dish==m) //when all dishes are cooked
+                    return true;
+            }
+        }
+        return false;
+    }
+}
