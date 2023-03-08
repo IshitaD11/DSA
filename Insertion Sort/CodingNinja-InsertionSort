@@ -1,0 +1,26 @@
+/* Coding Ninja - Insertion Sort
+
+https://www.codingninjas.com/codestudio/problems/insertion-sort_3155179?source=youtube&campaign=love_babbar_codestudio2&utm_source=youtube&utm_medium=affiliate&utm_campaign=love_babbar_codestudio2&leftPanelTab=1 
+//---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+import java.util.* ;
+import java.io.*; 
+
+public class Solution {
+
+	public static void insertionSort(int n , int[] arr) {
+		// Write your code here.
+		
+		for(int i=1;i<n;i++)
+		{
+			int tmp=arr[i];
+			int j=i-1;
+			while(j>=0 && tmp<arr[j]) //check till the selected element is less than current element
+			{
+				arr[j+1]=arr[j]; //shift to right
+				j--;
+			}
+			arr[j+1]=tmp;
+		}
+	}
+}
