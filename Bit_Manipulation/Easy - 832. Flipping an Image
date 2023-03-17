@@ -37,14 +37,31 @@ class Solution {
     public int[][] flipAndInvertImage(int[][] image) {
         int row=image.length;
         int col=image[0].length;
-        int[][] res = new int[row][col];
+
+        //---Brute Force--//
+        // int[][] res = new int[row][col];
+        // for(int i=0;i<row;i++)
+        // {
+        //     for(int j=0;j<col;j++)
+        //     {
+        //         res[i][j]=(image[i][col-1-j])^1;
+        //     }
+        // }
+        // return res;
+
+        //---two pointer to swap--//
         for(int i=0;i<row;i++)
         {
-            for(int j=0;j<col;j++)
+            int high=col-1;
+            int low=0;
+            while(low<=high)
             {
-                res[i][j]=(image[i][col-1-j])^1;
+                int tmp=image[i][high];
+                image[i][high]=image[i][low]^1;
+                image[i][low]=tmp^1;
+                high--; low++;
             }
         }
-        return res;
+        return image;
     }
 }
