@@ -1,0 +1,61 @@
+/* Given two n x n binary matrices mat and target, return true if it is possible to make mat equal to target by rotating mat in 90-degree increments, 
+or false otherwise.
+
+Example 1:
+Input: mat = [[0,1],[1,0]], target = [[1,0],[0,1]]
+Output: true
+Explanation: We can rotate mat 90 degrees clockwise to make mat equal target.
+Example 2:
+Input: mat = [[0,1],[1,1]], target = [[1,0],[0,1]]
+Output: false
+Explanation: It is impossible to make mat equal to target by rotating mat.
+Example 3:
+Input: mat = [[0,0,0],[0,1,0],[1,1,1]], target = [[1,1,1],[0,1,0],[0,0,0]]
+Output: true
+Explanation: We can rotate mat 90 degrees clockwise two times to make mat equal target.
+
+Constraints:
+
+n == mat.length == target.length
+n == mat[i].length == target[i].length
+1 <= n <= 10
+mat[i][j] and target[i][j] are either 0 or 1. 
+--------------------------------------------------------------------------------------------------------------------------------------------
+Intuition:
+
+taking an array of 4*4. Need to match the indexes of mat and target
+
+* 00 01 02 03                 30 20 10 00                   33 32 31 30                03 13 23 33                00 01 02 03
+  10 11 12 13     90 rotate   31 21 11 01   180 rotate      23 22 21 20   270 rotate   23 22 21 20  360 rotate    10 11 12 13
+  20 21 22 23   ------------> 32 22 12 02 ----------------> 13 12 11 10 -------------> 13 12 11 10 -------------> 20 21 22 23
+  30 31 32 33                 33 23 13 03                   03 02 01 00                03 02 01 00                30 31 32 33
+
+For 90 rotate -> mat[i][j]==target[n-1-j][i] 
+    180 rotate -> mat[i][j]==target[n-1-i][n-1-j]
+    270 rotate -> mat[i][j]==target[j][n-1-i]
+    360 rotate -> mat[i][j]==target[i][j]
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public boolean findRotation(int[][] mat, int[][] target) {
+        int r90=0, r180=0, r270 =0,r360=0;
+        int n=mat.length;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(mat[i][j]==target[n-1-j][i])
+                    r90++;
+                if(mat[i][j]==target[n-1-i][n-1-j])
+                    r180++;
+                if(mat[i][j]==target[j][n-1-i])
+                    r270++;
+                if(mat[i][j]==target[i][j])
+                    r360++;
+            }
+        }
+        if(r90==n*n || r180==n*n || r270==n*n || r360==n*n)
+            return true;
+        return false;
+    }
+}
