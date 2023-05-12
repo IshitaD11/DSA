@@ -32,21 +32,54 @@ Do this follow up */
 
 class Solution {
     public int[] productExceptSelf(int[] nums) {
-        int len= nums.length+2;
+        /* using two array prefix and suffix product
+        int len= nums.length;
         int[] prod_pf = new int[len];
         int[] prod_sf = new int[len];
-        int[] result = new int[nums.length];
-        prod_pf[0]=1;
-        prod_sf[len-1]=1;
+        int[] result = new int[len];
+        prod_pf[0]=nums[0];
+        prod_sf[len-1]=nums[len-1];
+        for(int indx=1;indx<len;indx++)
+        {
+            prod_pf[indx]=prod_pf[indx-1]*nums[indx];
+            prod_sf[len-indx-1]=prod_sf[len-indx]*nums[len-indx-1];
+        }
+        
+        // 0th position product
+        result[0]=prod_sf[1];
+        // last psotion product
+        result[len-1]=prod_pf[len-2];
         for(int indx=1;indx<len-1;indx++)
         {
-            prod_pf[indx]=prod_pf[indx-1]*nums[indx-1];
-            prod_sf[len-indx-1]=prod_sf[len-indx]*nums[len-indx-2];
+            result[indx]=prod_pf[indx-1]*prod_sf[indx+1];
         }
-        for(int indx=1;indx<=nums.length;indx++)
+        return result;*/
+
+        /*Using O(1) space complexity, approch same as above but here, store prefix and suffix in the actual array to decrease SC */
+
+        int len= nums.length;
+        int[] result = new int[len];
+
+        result[len-1]=nums[len-1];
+        // store suffix product in result array
+        for(int i=len-2;i>=0;i--)
         {
-            result[indx-1]=prod_pf[indx-1]*prod_sf[indx+1];
+            result[i]=result[i+1]*nums[i];
         }
+        // store prefix product in nums
+        for(int i=1;i<len;i++)
+        {
+            nums[i]=nums[i-1]*nums[i];
+        }
+        
+        //get the ans arraya
+        result[0]=result[1];
+        for(int i=1;i<len-1;i++)
+        {
+            result[i]=nums[i-1]*result[i+1];
+        }
+        result[len-1]=nums[len-2];
         return result;
+
     }
 }
