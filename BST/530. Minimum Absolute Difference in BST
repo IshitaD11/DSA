@@ -1,0 +1,72 @@
+/* 530. Minimum Absolute Difference in BST
+
+Given the root of a Binary Search Tree (BST), return the minimum absolute difference between the values of any two different nodes in the tree.
+
+ 
+
+Example 1:
+
+
+Input: root = [4,2,6,1,3]
+Output: 1
+Example 2:
+
+
+Input: root = [1,0,48,null,null,12,49]
+Output: 1
+ 
+
+Constraints:
+
+The number of nodes in the tree is in the range [2, 104].
+0 <= Node.val <= 105
+ 
+
+Note: This question is the same as 783: https://leetcode.com/problems/minimum-distance-between-bst-nodes/ */
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+/* in BST left_node.val < node.val < right_node.val
+using inOrder traversal we will compare left with current node and current node with right
+for root node, left side's right most node is the maximum value, example: for root 4, left side's max value is 3
+inorder traversal : 1 2 3 4 6 ==> we will compare every consecutive elements*/
+
+class Solution {
+    int prevNodeVal = -1;
+    int maxDiff = Integer.MAX_VALUE;
+
+    public int getMinimumDifference(TreeNode root) {
+        inOrderTraversal(root);
+        return maxDiff;
+    }
+
+    public void inOrderTraversal(TreeNode Node)
+    {
+        if(Node==null)
+            return;
+        
+        inOrderTraversal(Node.left);
+        
+        int currentDiff=Integer.MAX_VALUE;
+        if(prevNodeVal!= -1)
+            currentDiff = Math.abs(Node.val-prevNodeVal);
+        maxDiff=Math.min(maxDiff,currentDiff);
+        prevNodeVal = Node.val;
+
+        inOrderTraversal(Node.right);
+    }
+}
