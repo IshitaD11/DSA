@@ -1,0 +1,64 @@
+/* 149. Max Points on a Line
+
+Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.
+
+ 
+
+Example 1:
+
+
+Input: points = [[1,1],[2,2],[3,3]]
+Output: 3
+Example 2:
+
+
+Input: points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+Output: 4
+ 
+
+Constraints:
+
+1 <= points.length <= 300
+points[i].length == 2
+-104 <= xi, yi <= 104
+All the points are unique. */
+
+/* Check for each point from 0 to end, how many points on the right is on it's same line
+for first loop i = 0 to length, then second loop j = i+1 to length 
+Get slope for each pair by slope = (y1-y2)/(x1-x2) 
+count slope maximum frequency for each i point separarely, and keep track of max count 
+freq starting 2, as would already have 2 points for a slope*/
+
+
+class Solution {
+    public int maxPoints(int[][] points) {
+
+        double slope=0;
+        int maxPoints = 1;
+
+        for(int start=0;start<points.length;start++)
+        {
+            HashMap<Double,Integer> slopeFreq=new HashMap<Double,Integer>();
+            for(int indx=start+1;indx<points.length;indx++)
+            {
+                double x= points[start][0]-points[indx][0];
+                double y=points[start][1]-points[indx][1];
+                //on same x axis, edge case, y/x would be undefined, so taking min_value
+                if(x==0) 
+                    slope=Double.MIN_VALUE;  
+                //on same y axis, edge case, y/x would be 0, so taking 0
+                else if(y==0)
+                    slope=0.0;
+                else
+                    slope=y/x;
+
+                slopeFreq.put(slope,slopeFreq.getOrDefault(slope,1)+1);
+                maxPoints = Math.max(maxPoints,slopeFreq.get(slope));
+                if(maxPoints==points.length)
+                    return maxPoints;
+            }
+           
+        }   
+        return maxPoints;
+    }
+}
