@@ -1,0 +1,84 @@
+/* 4. Median of Two Sorted Arrays
+
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+The overall run time complexity should be O(log (m+n)).
+
+ 
+
+Example 1:
+
+Input: nums1 = [1,3], nums2 = [2]
+Output: 2.00000
+Explanation: merged array = [1,2,3] and median is 2.
+Example 2:
+
+Input: nums1 = [1,2], nums2 = [3,4]
+Output: 2.50000
+Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
+ 
+
+Constraints:
+
+nums1.length == m
+nums2.length == n
+0 <= m <= 1000
+0 <= n <= 1000
+1 <= m + n <= 2000
+-106 <= nums1[i], nums2[i] <= 106 */
+
+// binary search on array one, how many elements from array 1 will be selected to be at the left, so that left elements are less than right elements 
+// search space: 1 to length of arr1
+// search for no of elements to be put left of the median
+
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int nums1L = nums1.length;
+        int nums2L = nums2.length;
+        int st = 0;
+        int en = nums1.length;
+        int mergedArrMid = (nums1.length+nums2.length+1)/2;
+        while(st<=en)
+        {
+            int nums1Cut = st + (en-st)/2;
+            int nums2Cut = mergedArrMid-nums1Cut;
+
+            // need to check nums2Cut is withtin the range 0 to nums2.length
+            if(nums2Cut<0) //not possible index, already took too many elements from nums1, so reduce
+            {    
+                en = nums1Cut-1;
+            }
+            else if(nums2Cut>nums2L) //not possible index, took very less elements from nums1, so increas
+            {
+                st=nums1Cut+1;
+            }
+            else
+            {
+                double nums1Left = (double)(nums1Cut==0? Integer.MIN_VALUE:nums1[nums1Cut-1]);
+                double nums2Left = (double)(nums2Cut==0? Integer.MIN_VALUE:nums2[nums2Cut-1]);
+
+                double nums1Right = (double)(nums1Cut==nums1L? Integer.MAX_VALUE:nums1[nums1Cut]);
+                double nums2Right = (double)(nums2Cut==nums2L? Integer.MAX_VALUE:nums2[nums2Cut]);
+
+                if(nums1Left<=nums2Right && nums2Left<=nums1Right)
+                {
+                    // if the sum of 2 lengths is even, then median = left+right/2
+                    // if total length is odd, then median = left
+                    // as we took mid as (totLength+1)/2, the median will be present in left side
+                    if((nums1L+nums2L)%2==0)
+                        return (Math.max(nums1Left,nums2Left)+(Math.min(nums1Right,nums2Right)))/2;
+                    else
+                        return Math.max(nums1Left,nums2Left);
+
+                }
+                // if left side element is bigger than right, then need to reduce ele from nums1
+                else if(nums1Left>nums2Right)
+                    en = nums1Cut-1;
+                else
+                    st=nums1Cut+1;
+            }    
+            
+        }
+        return 0;
+    }
+}
