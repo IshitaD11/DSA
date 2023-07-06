@@ -32,7 +32,12 @@ Follow up: This problem is similar to Search in Rotated Sorted Array, but nums m
 
 /* always check if left side is sorted --> check st<target<mid --> then search
 else move to right side (Right side can be sorted or not). Do the same steps.
-If left is not sorted check st<target<mid --> then search in left, else search in right*/
+If left is not sorted check st<target<mid --> then search in left, else search in right
+
+For duplicate records, check if left is sorted or right is sorted, if not do two pointer to search the target */
+
+// O(logn)<=TC<=O(n)
+
 
 class Solution {
     public boolean search(int[] nums, int target) {
@@ -60,7 +65,14 @@ class Solution {
                     en=mid-1;
             }   
             else //Duplicate elements exists, increase st pointer to get unique elements at 1 side
-                st=st+1;
+            {
+                if(nums[st]==target || nums[en]==target)
+                    return true;
+                else
+                {
+                    st++; en--;
+                }
+            }    
         }        
         return false;
     }
