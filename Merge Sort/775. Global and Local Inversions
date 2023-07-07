@@ -1,0 +1,113 @@
+/* 775. Global and Local Inversions
+
+You are given an integer array nums of length n which represents a permutation of all the integers in the range [0, n - 1].
+
+The number of global inversions is the number of the different pairs (i, j) where:
+
+0 <= i < j < n
+nums[i] > nums[j]
+The number of local inversions is the number of indices i where:
+
+0 <= i < n - 1
+nums[i] > nums[i + 1]
+Return true if the number of global inversions is equal to the number of local inversions.
+
+ 
+
+Example 1:
+
+Input: nums = [1,0,2]
+Output: true
+Explanation: There is 1 global inversion and 1 local inversion.
+Example 2:
+
+Input: nums = [1,2,0]
+Output: false
+Explanation: There are 2 global inversions and 1 local inversion.
+ 
+
+Constraints:
+
+n == nums.length
+1 <= n <= 105
+0 <= nums[i] < n
+All the integers of nums are unique.
+nums is a permutation of all the numbers in the range [0, n - 1]. */
+
+/*Get the local inversion first on the unsorted array, with two pointers.
+Use merge sort for global inversion count */
+
+class Solution {
+    long globalInv=0;
+    public boolean isIdealPermutation(int[] nums) {
+        int len = nums.length;
+        // local inversion count
+        long localInv = 0;
+        for(int i=0;i<len-1;i++)
+        {
+            if(nums[i]>nums[i+1])
+                localInv++;
+        }
+        
+        // global inversion count by merge sort
+        mergeSort(nums,0,len-1);
+        if(localInv==globalInv)
+            return true;
+        return false;
+    }
+    public void mergeSort(int[] nums,int start,int end)
+    {
+        if(start==end)
+            return;
+        int mid = start+(end-start)/2;
+        mergeSort(nums,start,mid);
+        mergeSort(nums,mid+1,end);
+        mergerArr(nums,start,mid,end);
+    }
+    public void mergerArr(int[] arr, int start, int mid, int end)
+    {
+        int p1=start;
+        int p2=mid+1;
+        int resIdx = 0;
+        int[] tempArr = new int[end-start+1];
+
+        while(p1<=mid && p2<=end)
+        {
+            if(arr[p1]<arr[p2])
+            {
+                tempArr[resIdx++] = arr[p1++];
+            }
+            else
+            {
+                globalInv += ((long)mid-(long)p1+1);
+                tempArr[resIdx++] = arr[p2++];
+            }
+        }
+
+        while(p1<=mid)
+            tempArr[resIdx++] = arr[p1++];
+        
+        while(p2<=end)
+            tempArr[resIdx++] = arr[p2++];
+
+        for(int i=start;i<=end;i++)
+        {
+            arr[i]=tempArr[i-start];
+        }
+    }
+}
+
+/*Simpler solution: So then we should consider that the ideal version of A without any inversions would be one which is strictly increasing, which means that for all i, A[i] = i. Any deviation from this results in an inversion.
+
+Also, the further A[i] deviates from i, the more global inversions are ultimately triggered. In fact, the only possible way for the number of global inversions to be equal to the number of local inversions is if each number has a maximum deviation from ideal of only 1, meaning that it represents only a single global inversion and a single local inversion.
+
+https://leetcode.com/problems/global-and-local-inversions/solutions/1143422/js-python-java-c-simple-3-line-solutions-w-explanation/
+ */
+
+//  class Solution {
+//     public boolean isIdealPermutation(int[] A) {
+//         for (int i = 0; i < A.length; i++)
+//             if (i - A[i] > 1 || i - A[i] < -1) return false;
+//         return true;
+//     }
+// }
