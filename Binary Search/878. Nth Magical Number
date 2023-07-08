@@ -1,0 +1,59 @@
+/* 878. Nth Magical Number
+
+A positive integer is magical if it is divisible by either a or b.
+
+Given the three integers n, a, and b, return the nth magical number. Since the answer may be very large, return it modulo 109 + 7.
+
+ 
+
+Example 1:
+
+Input: n = 1, a = 2, b = 3
+Output: 2
+Example 2:
+
+Input: n = 4, a = 2, b = 3
+Output: 6
+ 
+
+Constraints:
+
+1 <= n <= 109
+2 <= a, b <= 4 * 104 */
+
+/* Binary search on the numbers to find the nth magical number. 
+start is min of a,b as number should be divisible by a or b
+end is n*min(a,b) to get the nth number
+get the position of magical number found = (count of nums divisible by a till mid) + (count of nums divisible by b till mid) - (count of nums which are divisible by both a,b)
+ */
+
+class Solution {
+    public int nthMagicalNumber(int n, int a, int b) {
+        long al = (long)a;
+        long bl=(long)b;
+        long st = Math.min(al,bl);
+        long en = n * (Math.min(al,bl));
+        long lcmAB = (al*bl)/gcd(al,bl);
+        long ans=0;
+        while(st<=en)
+        {
+            long mid = st + (en-st)/2;
+            long magicNumCnt = (mid/al)+(mid/bl)-(mid/lcmAB);
+
+            if(magicNumCnt>=n)
+            {
+                ans = mid;
+                en=mid-1;
+            }
+            else
+                st=mid+1;
+        }
+        return (int)(ans%1000000007);
+    }
+    public long gcd(long a,long b)
+    {
+        if(b==0)
+            return a;
+        return gcd(b,a%b);
+    }
+}
