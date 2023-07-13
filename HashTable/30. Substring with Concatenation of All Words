@@ -1,0 +1,86 @@
+/* 30. Substring with Concatenation of All Words
+
+You are given a string s and an array of strings words. All the strings of words are of the same length.
+
+A concatenated substring in s is a substring that contains all the strings of any permutation of words concatenated.
+
+For example, if words = ["ab","cd","ef"], then "abcdef", "abefcd", "cdabef", "cdefab", "efabcd", and "efcdab" are all concatenated strings. "acdbef" is not a concatenated substring because it is not the concatenation of any permutation of words.
+Return the starting indices of all the concatenated substrings in s. You can return the answer in any order.
+
+ 
+
+Example 1:
+
+Input: s = "barfoothefoobarman", words = ["foo","bar"]
+Output: [0,9]
+Explanation: Since words.length == 2 and words[i].length == 3, the concatenated substring has to be of length 6.
+The substring starting at 0 is "barfoo". It is the concatenation of ["bar","foo"] which is a permutation of words.
+The substring starting at 9 is "foobar". It is the concatenation of ["foo","bar"] which is a permutation of words.
+The output order does not matter. Returning [9,0] is fine too.
+Example 2:
+
+Input: s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
+Output: []
+Explanation: Since words.length == 4 and words[i].length == 4, the concatenated substring has to be of length 16.
+There is no substring of length 16 is s that is equal to the concatenation of any permutation of words.
+We return an empty array.
+Example 3:
+
+Input: s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
+Output: [6,9,12]
+Explanation: Since words.length == 3 and words[i].length == 3, the concatenated substring has to be of length 9.
+The substring starting at 6 is "foobarthe". It is the concatenation of ["foo","bar","the"] which is a permutation of words.
+The substring starting at 9 is "barthefoo". It is the concatenation of ["bar","the","foo"] which is a permutation of words.
+The substring starting at 12 is "thefoobar". It is the concatenation of ["the","foo","bar"] which is a permutation of words.
+ 
+
+Constraints:
+
+1 <= s.length <= 104
+1 <= words.length <= 5000
+1 <= words[i].length <= 30
+s and words[i] consist of lowercase English letters. */
+
+/*Create a hashMap and store the freq of each string of words. We can use this later to compare with each window of s
+for String s, take each window of (words.length * each String length), store each substring of length same as window String length and store it in hashMap, check if it both the map matches, then add the start index into ans */
+
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        // put the words Strings in a map, and that can be used to compare with substrings of s
+        HashMap<String,Integer> wordsFreq = new HashMap<String,Integer>();
+
+        for(int i=0;i<words.length;i++)
+        {
+            wordsFreq.put(words[i],wordsFreq.getOrDefault(words[i],0)+1);
+        }
+
+        ArrayList<Integer> ans = new ArrayList<Integer>();
+
+        int windowLen = words.length * words[0].length();
+        int eachStrLen = words[0].length();
+        int strCnt=words.length;
+
+        int st =0;
+        int en=windowLen-1;
+        HashMap<String,Integer> sMap ;
+
+        while(en<s.length())
+        {
+            int p=st;
+            sMap=new HashMap<>();
+            while(p<(st+windowLen))
+            {
+                String temp = s.substring(p,p+eachStrLen);
+                if(!wordsFreq.containsKey(temp))
+                    break;
+                sMap.put(temp,sMap.getOrDefault(temp,0)+1);
+                p=p+eachStrLen;
+            }
+            if(wordsFreq.equals(sMap))
+                ans.add(st);
+            st++;
+            en++;
+        }
+        return ans;
+    }
+}
