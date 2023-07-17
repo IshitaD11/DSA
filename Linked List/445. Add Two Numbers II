@@ -1,0 +1,92 @@
+/* 445. Add Two Numbers II
+
+You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+ 
+
+Example 1:
+
+
+Input: l1 = [7,2,4,3], l2 = [5,6,4]
+Output: [7,8,0,7]
+Example 2:
+
+Input: l1 = [2,4,3], l2 = [5,6,4]
+Output: [8,0,7]
+Example 3:
+
+Input: l1 = [0], l2 = [0]
+Output: [0]
+ 
+
+Constraints:
+
+The number of nodes in each linked list is in the range [1, 100].
+0 <= Node.val <= 9
+It is guaranteed that the list represents a number that does not have leading zeros.
+ 
+
+Follow up: Could you solve it without reversing the input lists? */
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+/*solution 1: reverse both LL and sum from the start of both LL same as '2. Add Two Numbers'
+Solution 2: add the two LL in stacks, as we get data from the top in the stack, will get the end elements, sum up, create new node with the value, and create link prev.next=nn. continue until l1 or l2 or carry is exhausted. At the end need to reverse the nodes. */
+
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        
+        Stack<Integer> stackl1 = new Stack<Integer>();
+        Stack<Integer> stackl2 = new Stack<Integer>();
+
+        // put l1 in stack1
+        while(l1!=null)
+        {    
+            stackl1.push(l1.val);
+            l1=l1.next;
+        }
+
+        // l2 in stack2
+        while(l2!=null)
+        {    
+            stackl2.push(l2.val);
+            l2=l2.next;
+        }
+
+        ListNode prev=null;
+
+        int carry=0;
+        int sum=0;
+        int rem=0;
+        while(!stackl1.empty()|| !stackl2.empty() || carry!=0)
+        {
+            sum=0;
+            if(!stackl1.empty())
+                sum+=stackl1.pop();
+            
+            if(!stackl2.empty())
+                sum+=stackl2.pop();
+
+            sum+=carry;
+            rem=sum%10;
+            carry=sum/10;
+
+            ListNode nn=new ListNode(rem);
+            // add nodes in reverse order
+            nn.next=prev;
+            prev=nn;
+        }
+
+        return prev; //ending at prev, which is the head
+    }
+}
