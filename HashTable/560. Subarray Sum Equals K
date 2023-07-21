@@ -1,0 +1,50 @@
+/* 560. Subarray Sum Equals K
+
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+Example 2:
+
+Input: nums = [1,2,3], k = 3
+Output: 2
+ 
+
+Constraints:
+
+1 <= nums.length <= 2 * 104
+-1000 <= nums[i] <= 1000
+-107 <= k <= 107 */
+
+/*Lets take prefix sum of the array pf and an subarray sum = k
+pf[j]-pf[i]=k --> pf[j]-k=pf[i] --> i and j are two indexex and i<j
+Instead of using prefix array, we will carry forward the sum, and add the sum to hashMap with frequency, if (sum-k) exists in map, i.e pf[i], increase the counter as it is the valid subarray. If multiple pf[i] exists, means pf[j] will create that many subarray with pf[i], so add the frequency to ans */
+
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
+
+        map.put(0,1); //to handle if the subarray starts from 0
+
+        Integer sum=0;
+        int count=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            sum+=nums[i];
+            Integer findNum = sum-k;
+            if(map.containsKey(findNum))
+            {
+                count+=map.get(findNum);
+            }
+            map.put(sum,map.getOrDefault(sum,0)+1);
+        }
+        return count;
+
+    }
+}
