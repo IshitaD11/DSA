@@ -36,6 +36,17 @@ Constraints:
 0 <= sum(nums[i]) <= 231 - 1
 1 <= k <= 231 - 1 */
 
+/*If 6%5=1 then (6+5)%5=1 --> so for a subarray sum (6+5)-6 = 5 
+To find subarray sum is multiple of K, store the nums[i]%k in hashmap, with its position (i+1). The subarray length to be atleast 2, the previously found value, should be atleast<i.
+nums[i]=23, 2, 4, 6, 7
+sum    =23,25,29,35,42
+%6     = 5, 1, 5, 5, 0
+(i+1)  = 1, 2, 3, 4, 5
+i      = 0  1  2  3  4
+when we reach 2nd 5, i=2, and hashMap.get = 1 --> 1<2 --> valid
+when we reach 3rd 5, i=3 and previous 5 is having (i+1)=3 --> length 1 subarray, not valid
+we want to store the highest distance, so no need to change the index in hashMap, for 2nd 5 */
+
 class Solution {
     public boolean checkSubarraySum(int[] nums, int k) {
         HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
