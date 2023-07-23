@@ -1,0 +1,53 @@
+/* 611. Valid Triangle Number
+
+
+Given an integer array nums, return the number of triplets chosen from the array that can make triangles if we take them as side lengths of a triangle.
+
+ 
+
+Example 1:
+
+Input: nums = [2,2,3,4]
+Output: 3
+Explanation: Valid combinations are: 
+2,3,4 (using the first 2)
+2,3,4 (using the second 2)
+2,2,3
+Example 2:
+
+Input: nums = [4,2,3,4]
+Output: 4
+ 
+
+Constraints:
+
+1 <= nums.length <= 1000
+0 <= nums[i] <= 1000 */
+
+/*Formula for Triangle if a,b,c are 3 sides: a+b>c and a+c>b and b+c>a
+now if we take a[i]+a[j]>a[k] where i<j<k and increase k until a[i]+a[j]<a[k]
+now we will increase j so that if satidfies a[i]+a[j]>a[k] and increase count*/
+
+class Solution {
+    public int triangleNumber(int[] nums) {
+        Arrays.sort(nums);
+
+        int ans=0;
+        int len=nums.length;
+        for(int i=0;i<len-2;i++)
+        {
+            for(int j=i+1, k=j+1; j<(len-1) && k<=len;)
+            {
+                if(k==len || nums[i]+nums[j]<=nums[k])
+                {
+                    if(k>(j+1))
+                        ans+=(k-j-1); //(k-1)-(j+1)+1
+                    j++;
+                }
+                else
+                    k++;
+            }
+        }
+        return ans;
+    }
+}
