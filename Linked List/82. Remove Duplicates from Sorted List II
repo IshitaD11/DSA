@@ -1,0 +1,68 @@
+/* 82. Remove Duplicates from Sorted List II
+
+Given the head of a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list. Return the linked list sorted as well.
+
+ 
+
+Example 1:
+
+
+Input: head = [1,2,3,3,4,4,5]
+Output: [1,2,5]
+Example 2:
+
+
+Input: head = [1,1,1,2,3]
+Output: [2,3]
+ 
+
+Constraints:
+
+The number of nodes in the list is in the range [0, 300].
+-100 <= Node.val <= 100
+The list is guaranteed to be sorted in ascending order. */
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+ //TC: O(N), SC:O(1)
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        
+        // if only 0/1 nodes present return it
+        if(head==null || head.next==null)
+            return head;
+            
+        // create dummy node
+        ListNode dummy = new ListNode(0);
+        dummy.next=head;
+        ListNode itr = dummy;
+
+        // loop and check for node.next and node.next.next for duplicate
+        while(itr.next!=null && itr.next.next!=null)
+        {
+            // check for duplicates in itr.next and itr.next.next
+            if(itr.next.val==itr.next.next.val)
+            {
+                int duplicate_val=itr.next.val;
+                while(itr.next!=null && itr.next.val==duplicate_val)
+                {
+                    // skip the nodes which have same value as duplicate_val
+                    itr.next=itr.next.next;
+                }
+            }
+            else //not duplicate so move the itr node forward
+            {
+                itr=itr.next;
+            }
+        }
+        return dummy.next;
+    }
+}
