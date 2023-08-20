@@ -1,0 +1,41 @@
+/* 22. Generate Parentheses
+
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+ 
+
+Example 1:
+
+Input: n = 3
+Output: ["((()))","(()())","(())()","()(())","()()()"]
+Example 2:
+
+Input: n = 1
+Output: ["()"]
+ 
+
+Constraints:
+
+1 <= n <= 8 */
+
+//TC:O(2^n) |  SC:O(n) -->recursion stack
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> list=new ArrayList<String>();
+        generate(n,"",0,0,list);
+        return list;
+    }
+    public void generate(int n,String str,int openCnt,int closeCnt,List<String> list)
+    {
+        if(str.length()==2*n)
+        {
+            list.add(str);
+            return;
+        }    
+        if(openCnt<n)
+            generate(n,str+'(',openCnt+1,closeCnt,list);
+        if(openCnt>closeCnt)
+            generate(n,str+')',openCnt,closeCnt+1,list);
+    }
+}
