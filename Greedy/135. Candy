@@ -1,0 +1,77 @@
+/* 135. Candy
+
+There are n children standing in a line. Each child is assigned a rating value given in the integer array ratings.
+
+You are giving candies to these children subjected to the following requirements:
+
+Each child must have at least one candy.
+Children with a higher rating get more candies than their neighbors.
+Return the minimum number of candies you need to have to distribute the candies to the children.
+
+ 
+
+Example 1:
+
+Input: ratings = [1,0,2]
+Output: 5
+Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
+Example 2:
+
+Input: ratings = [1,2,2]
+Output: 4
+Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively.
+The third child gets 1 candy because it satisfies the above two conditions.
+ 
+
+Constraints:
+
+n == ratings.length
+1 <= n <= 2 * 104
+0 <= ratings[i] <= 2 * 104 */
+
+// TC:O(n) SC:O(1)
+
+/* So we take initially n candy for n children. Then we start traversing the rating array from the second element. If we find equal elements we continue to next element as they already have 1 candy.
+
+If an increasing slop is found (ratings[i] > ratings [i-1]) we increase value of peak and and add the peak value to candy. After each iteration new peak is found and the value is added to candy. In this way we also get the value of minimum height of the peak at the end.
+
+If a decreasing slope is found (ratings[i] < ratings [i-1]) we calculate the depth of the valley which is in turn the minimum height of the previous peak. In each iteration we increse the valley by 1 and add it to the candy. You can visualise it as 1 candy is added to each of the previous members untill peak or the new peak value is interted at the previous peak and other values are shifted to right by 1 place. We also need to check if it is going out of array if so then return the number of candy.
+
+After this we can see we have added the peak value twice in candy once as peak and once as valley. But we need only the max value out of these two so we substract the min(peak, valley) from candy.
+
+After that return the candy.*/
+
+class Solution {
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        int candy=n; //as each child must have 1 candy
+        for(int i=1;i<n;)
+        {
+            if(ratings[i]==ratings[i-1]) //same candies
+            {
+                i++;
+                continue;
+            }
+
+            int peak=0;
+            int valley=0;
+
+            while(i<n && ratings[i]>ratings[i-1]) 
+            {
+                i++;
+                peak++;
+                candy+=peak;
+            }
+
+            while(i<n && ratings[i]<ratings[i-1])
+            {
+                i++;
+                valley++;
+                candy+=valley;
+            }
+            //We have added the common element twice in peak and valley, reducing the min value
+            candy-=Math.min(peak,valley); 
+        }
+        return candy;
+    }
+}
