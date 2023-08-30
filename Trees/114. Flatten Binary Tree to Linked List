@@ -1,0 +1,94 @@
+/* 114. Flatten Binary Tree to Linked List
+
+Given the root of a binary tree, flatten the tree into a "linked list":
+
+The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.
+The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+ 
+
+Example 1:
+
+
+Input: root = [1,2,5,3,4,null,6]
+Output: [1,null,2,null,3,null,4,null,5,null,6]
+Example 2:
+
+Input: root = []
+Output: []
+Example 3:
+
+Input: root = [0]
+Output: [0]
+ 
+
+Constraints:
+
+The number of nodes in the tree is in the range [0, 2000].
+-100 <= Node.val <= 100
+ 
+
+Follow up: Can you flatten the tree in-place (with O(1) extra space)? */
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+// smaller task: bright left node to root.right, then add left.right=the prev right node
+// flatten both left and right subtree, separately, recursively. At the end, bright left to right, and add right nodes at the end of left
+// We need head and tail of each subtree, when left tree has more than 1 node, we had to traverse to reach end of the node
+// TC:O(n) SC:O(h)
+class Solution {
+    public class Pair
+    {
+        TreeNode head;
+        TreeNode tail;
+        Pair(TreeNode hd,TreeNode tl)
+        {
+            head=hd;
+            tail=tl;
+        }
+    }
+    public void flatten(TreeNode root) {
+        Pair rt=treeToLL(root);
+    }
+    public Pair treeToLL(TreeNode root)
+    {
+        if(root==null)
+            return new Pair(null,null);
+        Pair leftPair = treeToLL(root.left);
+        Pair rightPair = treeToLL(root.right);
+        // remove left node
+        root.left=null;
+        
+        // consider all cases: both left and right node is null, only root be passed as head and tail for LL
+        if(leftPair.head==null && rightPair.head==null)
+            return new Pair(root,root);
+        //if left side is null, root is head, and right.tail is tail
+        if(leftPair.head==null)
+            return new Pair(root,rightPair.tail);
+        // if right side is null, need to bright left subtree to root.right
+        if(rightPair.head==null)
+        {
+            root.right=leftPair.head;
+            return new Pair(root,leftPair.tail);
+        }  
+        //if we have nodes on both sides, bring left subtree to right, then add right subtree after the whole left subtree
+        else
+        {
+            root.right=leftPair.head;
+            leftPair.tail.right=rightPair.head;
+            return new Pair(root,rightPair.tail);
+        }
+    }
+}
