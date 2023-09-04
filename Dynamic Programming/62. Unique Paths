@@ -1,0 +1,68 @@
+/* 62. Unique Paths
+
+There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+
+Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+The test cases are generated so that the answer will be less than or equal to 2 * 109.
+
+ 
+
+Example 1:
+
+
+Input: m = 3, n = 7
+Output: 28
+Example 2:
+
+Input: m = 3, n = 2
+Output: 3
+Explanation: From the top-left corner, there are a total of 3 ways to reach the bottom-right corner:
+1. Right -> Down -> Down
+2. Down -> Down -> Right
+3. Down -> Right -> Down
+ 
+
+Constraints:
+
+1 <= m, n <= 100 */
+
+class Solution {
+    public int uniquePaths(int m, int n) {
+    /* backtracking solution: TC:O(2^n), failing as Time limit exceed    
+        int[] ans = new int[0];
+        findpaths(m,n,0,0,ans);
+        return ans[0];
+    }
+    public void findpaths(int m,int n,int i,int j,int[] ans)
+    {
+        if(i==m-1 && j==n-1)
+        {
+            ans[0]++; return;
+        }
+        // System.out.println("i"+i);
+        // System.out.println("j"+j);
+        if(i>=0 && j>=0 && i<m && j<n)
+        {
+            int rj=j+1;
+            int bi=i+1;
+            findpaths(m,n,i,rj,ans);
+            findpaths(m,n,bi,j,ans);
+        }*/
+
+        //DP solution with Tabulation (Start from smallest to bigger problem) TC:O(n*m)
+        // smaller problem, no of ways to reach mat[i][j] = 2 possible ways: reach from above cells or reach from left cell to current cell. so mat[i][j]=ways to reach just above cell + ways to reach just left cell
+        int[][] mat = new int[m][n];
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(i==0 || j ==0)
+                    mat[i][j]=1;
+                else
+                    mat[i][j]=mat[i-1][j]+mat[i][j-1];
+            }
+        }
+        return mat[m-1][n-1];
+    }
+}
