@@ -1,0 +1,147 @@
+/* 2866. Beautiful Towers II
+
+You are given a 0-indexed array maxHeights of n integers.
+
+You are tasked with building n towers in the coordinate line. The ith tower is built at coordinate i and has a height of heights[i].
+
+A configuration of towers is beautiful if the following conditions hold:
+
+1 <= heights[i] <= maxHeights[i]
+heights is a mountain array.
+Array heights is a mountain if there exists an index i such that:
+
+For all 0 < j <= i, heights[j - 1] <= heights[j]
+For all i <= k < n - 1, heights[k + 1] <= heights[k]
+Return the maximum possible sum of heights of a beautiful configuration of towers.
+
+ 
+
+Example 1:
+
+Input: maxHeights = [5,3,4,1,1]
+Output: 13
+Explanation: One beautiful configuration with a maximum sum is heights = [5,3,3,1,1]. This configuration is beautiful since:
+- 1 <= heights[i] <= maxHeights[i]  
+- heights is a mountain of peak i = 0.
+It can be shown that there exists no other beautiful configuration with a sum of heights greater than 13.
+Example 2:
+
+Input: maxHeights = [6,5,3,9,2,7]
+Output: 22
+Explanation: One beautiful configuration with a maximum sum is heights = [3,3,3,9,2,2]. This configuration is beautiful since:
+- 1 <= heights[i] <= maxHeights[i]
+- heights is a mountain of peak i = 3.
+It can be shown that there exists no other beautiful configuration with a sum of heights greater than 22.
+Example 3:
+
+Input: maxHeights = [3,2,5,5,2,3]
+Output: 18
+Explanation: One beautiful configuration with a maximum sum is heights = [2,2,5,5,2,2]. This configuration is beautiful since:
+- 1 <= heights[i] <= maxHeights[i]
+- heights is a mountain of peak i = 2. 
+Note that, for this configuration, i = 3 can also be considered a peak.
+It can be shown that there exists no other beautiful configuration with a sum of heights greater than 18.
+ 
+
+Constraints:
+
+1 <= n == maxHeights <= 105
+1 <= maxHeights[i] <= 109 */
+
+class Solution {
+    public long maximumSumOfHeights(List<Integer> maxHeights) {
+        // n^2 will give TLE, so store the ans of left sum and right sum taken ith element as peak. 
+        // finally sum and get the max ans for each ith element as peak
+        
+        int len=maxHeights.size();
+        //if h[i-1]<=h[i] --> we can take h[i-1] as it is, so sum till ith ele = sum(i-1)+h[i]
+        // if h[i-1]>h[i] --> we need to reduce h[i-1] and it's left elements till the element h[k] which is minimum than h[i]
+        // so sum = (i-k) elements flatten to h[i]+sum till k elements = (i-k)*h[i]+sum[k]
+        // to identify the left min element we will use stack
+        // TC:O(n) SC:O(n)
+        
+        Stack<Integer> stk = new Stack<>();
+        long[] leftSum=new long[len];
+        int[] leftMin=new int[len];
+
+        //getting the leftmin array
+        for(int i=0;i<len;i++)
+        {
+            while(!stk.empty() && maxHeights.get(i)<=maxHeights.get(stk.peek()))
+                stk.pop();
+            
+            if(stk.empty())
+                leftMin[i]=-1;
+            else
+                leftMin[i]=stk.peek();
+            stk.push(i);
+        }
+        
+        // System.out.println("leftMin"+Arrays.toString(leftMin));
+        
+        //creating leftSum array
+        leftSum[0]=maxHeights.get(0);
+        
+        for(int i=1;i<len;i++)
+        {
+            if(maxHeights.get(i-1)<=maxHeights.get(i))
+                leftSum[i]=leftSum[i-1]+(long)maxHeights.get(i);
+            else
+            {
+                //get the left min index
+                int lmi =  leftMin[i];
+                leftSum[i]=(long)(i-lmi)*(long)maxHeights.get(i);
+                if(lmi!=-1)
+                    leftSum[i]+=leftSum[lmi];
+                
+            }
+        }
+        // System.out.println("leftSum"+Arrays.toString(leftSum));
+        
+        stk = new Stack<>();
+        long[] rightSum=new long[len];
+        int[] rightMin=new int[len];
+        //getting the rightmin array
+        for(int i=len-1;i>=0;i--)
+        {
+            while(!stk.empty() && maxHeights.get(i)<=maxHeights.get(stk.peek()))
+                stk.pop();
+            
+            if(stk.empty())
+                rightMin[i]=len;
+            else
+                rightMin[i]=stk.peek();
+            stk.push(i);
+        }
+        // System.out.println("rightMin"+Arrays.toString(rightMin));
+        
+        //creating rightSum array
+        rightSum[len-1]=(long)maxHeights.get(len-1);
+        
+        for(int i=len-2;i>=0;i--)
+        {
+            if(maxHeights.get(i+1)<=maxHeights.get(i))
+                rightSum[i]=rightSum[i+1]+(long)maxHeights.get(i);
+            else
+            {
+                //get the right min index
+                int rmi =  rightMin[i];
+                rightSum[i] = (long)(rmi-i)*(long)maxHeights.get(i);
+                if(rmi!=len)
+                    rightSum[i]+=rightSum[rmi];
+                
+            }
+        }
+        // System.out.println("rightSum"+Arrays.toString(rightSum));
+        
+        //finally construct ans taking each elements as peak and sum up left and right sums, get max
+        long maxSum=0;
+        
+        for(int i=0;i<len;i++)
+        {
+            long sum = leftSum[i]+rightSum[i]-(long)maxHeights.get(i);
+            maxSum=Math.max(maxSum,sum);
+        }
+        return maxSum;
+    }
+}
