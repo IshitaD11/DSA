@@ -34,7 +34,6 @@ Constraints:
 0 <= word1.length, word2.length <= 500
 word1 and word2 consist of lowercase English letters. */
 
-//if both string char matches then check for prev char, if current char doesnot matches, then delete s1[i]th char(add ascii to ans) and try to match s1(i-1) with s2(j) char. Also delete s2[j]th char(add ascii to ans) and try to match s1[i] with s2[j-1]. Min of both these cases would be ans.
 // TC:O(n*m) SC:O(n*m)
 
 class Solution {
