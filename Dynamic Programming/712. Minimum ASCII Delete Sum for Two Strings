@@ -1,0 +1,79 @@
+/* 712. Minimum ASCII Delete Sum for Two Strings
+
+Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+
+You have the following three operations permitted on a word:
+
+Insert a character
+Delete a character
+Replace a character
+ 
+
+Example 1:
+
+Input: word1 = "horse", word2 = "ros"
+Output: 3
+Explanation: 
+horse -> rorse (replace 'h' with 'r')
+rorse -> rose (remove 'r')
+rose -> ros (remove 'e')
+Example 2:
+
+Input: word1 = "intention", word2 = "execution"
+Output: 5
+Explanation: 
+intention -> inention (remove 't')
+inention -> enention (replace 'i' with 'e')
+enention -> exention (replace 'n' with 'x')
+exention -> exection (replace 'n' with 'c')
+exection -> execution (insert 'u')
+ 
+
+Constraints:
+
+0 <= word1.length, word2.length <= 500
+word1 and word2 consist of lowercase English letters. */
+
+
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int len1=word1.length();
+        int len2=word2.length();
+        int[][] dp = new int[len1][len2];
+        for(int i=0;i<len1;i++)
+        {
+            Arrays.fill(dp[i],-1);
+        }
+        int ans = actions(word1,word2,len1-1,len2-1,dp);
+        return ans;
+    }
+    public int actions(String s1,String s2,int idx1,int idx2,int[][] dp)
+    {
+        if(idx1<0 && idx2<0)
+            return 0;
+        if(idx1<0)
+        {
+            // need to insert 0-idx2 elements
+            return idx2+1;
+        }
+        if(idx2<0)
+        {
+            // need to delete 0-idx1 elements
+            return idx1+1;
+        }
+
+        if(dp[idx1][idx2]!=-1)
+            return dp[idx1][idx2];
+
+        if(s1.charAt(idx1)==s2.charAt(idx2))
+            dp[idx1][idx2]=actions(s1,s2,idx1-1,idx2-1,dp);
+        else
+        {
+            int ins = actions(s1,s2,idx1,idx2-1,dp);
+            int del = actions(s1,s2,idx1-1,idx2,dp);
+            int rep = actions(s1,s2,idx1-1,idx2-1,dp);
+            dp[idx1][idx2]=Math.min(ins,Math.min(del,rep))+1;
+        }
+        return dp[idx1][idx2];
+    }
+}
