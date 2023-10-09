@@ -1,0 +1,105 @@
+/* 1458. Max Dot Product of Two Subsequences
+
+Given two arrays nums1 and nums2.
+
+Return the maximum dot product between non-empty subsequences of nums1 and nums2 with the same length.
+
+A subsequence of a array is a new array which is formed from the original array by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, [2,3,5] is a subsequence of [1,2,3,4,5] while [1,5,3] is not).
+
+ 
+
+Example 1:
+
+Input: nums1 = [2,1,-2,5], nums2 = [3,0,-6]
+Output: 18
+Explanation: Take subsequence [2,-2] from nums1 and subsequence [3,-6] from nums2.
+Their dot product is (2*3 + (-2)*(-6)) = 18.
+Example 2:
+
+Input: nums1 = [3,-2], nums2 = [2,-6,7]
+Output: 21
+Explanation: Take subsequence [3] from nums1 and subsequence [7] from nums2.
+Their dot product is (3*7) = 21.
+Example 3:
+
+Input: nums1 = [-1,-1], nums2 = [1,1]
+Output: -1
+Explanation: Take subsequence [-1] from nums1 and subsequence [1] from nums2.
+Their dot product is -1.
+ 
+
+Constraints:
+
+1 <= nums1.length, nums2.length <= 500
+-1000 <= nums1[i], nums2[i] <= 1000 */
+
+class Solution {
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+        int lenA=nums1.length;
+        int lenB=nums2.length;
+
+        // handle special case where all elements of a arr in negative
+        int num1Min=Integer.MAX_VALUE;
+        int num1Max=Integer.MIN_VALUE;
+        int num2Min=Integer.MAX_VALUE;
+        int num2Max=Integer.MIN_VALUE;
+
+        for(int i=0;i<lenA;i++)
+        {
+            num1Min=Math.min(num1Min,nums1[i]);
+            num1Max=Math.max(num1Max,nums1[i]);
+        }
+
+        for(int i=0;i<lenB;i++)
+        {
+            num2Min=Math.min(num2Min,nums2[i]);
+            num2Max=Math.max(num2Max,nums2[i]);
+        }
+
+        if((num1Min<0 && num1Max<0) || (num2Min<0 && num2Max<0))
+        {
+            return Math.max((num1Min*num2Max),(num1Max*num2Min));
+        }
+
+        int[][] dp = new int[lenA][lenB];
+
+        for(int i=0;i<lenA;i++)
+            Arrays.fill(dp[i],-1);
+
+        int ans = dotProduct(nums1,nums2,lenA-1,lenB-1,dp);
+        return ans;
+    }
+
+    public int dotProduct(int[] a,int[] b,int idxA,int idxB,int[][] dp)
+    {
+        if(idxA<0 || idxB<0)
+            return 0;
+
+        if(dp[idxA][idxB]!=-1)
+            return dp[idxA][idxB];
+
+        // do not take current idxA
+        int rejA = dotProduct(a,b,idxA-1,idxB,dp);
+
+        // select idxA & idxB both elements
+        int sel = dotProduct(a,b,idxA-1,idxB-1,dp) + (a[idxA]*b[idxB]);
+        
+        // reject the idxB, try to match idxA with idxB-1 index
+        int rejB = dotProduct(a,b,idxA,idxB-1,dp);
+
+        int max = 0;
+
+        // take each ele of b and get the max sum
+        // for(int i=0;i<=idxB;i++)
+        // {
+        //     int sel = dotProduct(a,b,idxA-1,i-1,dp);
+        //     int curr= (a[idxA]*b[i]);
+        //     sel= sel+curr;
+        //     max=Math.max(sel,max);
+        // }
+
+        max = Math.max(rejA,Math.max(rejB,sel));
+        dp[idxA][idxB] = max;
+        return dp[idxA][idxB];
+    }
+}
