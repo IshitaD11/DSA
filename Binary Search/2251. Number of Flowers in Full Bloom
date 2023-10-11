@@ -30,7 +30,7 @@ flowers[i].length == 2
 1 <= people.length <= 5 * 104
 1 <= people[i] <= 109 */
 
-// TC: O(n+nlogm) SC:O(n)
+// TC: O(nlogn+nlogm) SC:O(n)
 class Solution {
     public int[] fullBloomFlowers(int[][] flowers, int[] people) {
         // idea is to check for each people's arrival, how many begining time started and how many ending time ended. Begin-end is the answer. For this we need to segregate the begin time and end time array. Sort each array to apply binary search on them.
