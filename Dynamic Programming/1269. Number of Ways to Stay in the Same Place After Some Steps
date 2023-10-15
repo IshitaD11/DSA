@@ -1,0 +1,102 @@
+/* 1269. Number of Ways to Stay in the Same Place After Some Steps
+
+
+You have a pointer at index 0 in an array of size arrLen. At each step, you can move 1 position to the left, 1 position to the right in the array, or stay in the same place (The pointer should not be placed outside the array at any time).
+
+Given two integers steps and arrLen, return the number of ways such that your pointer is still at index 0 after exactly steps steps. Since the answer may be too large, return it modulo 109 + 7.
+
+ 
+
+Example 1:
+
+Input: steps = 3, arrLen = 2
+Output: 4
+Explanation: There are 4 differents ways to stay at index 0 after 3 steps.
+Right, Left, Stay
+Stay, Right, Left
+Right, Stay, Left
+Stay, Stay, Stay
+Example 2:
+
+Input: steps = 2, arrLen = 4
+Output: 2
+Explanation: There are 2 differents ways to stay at index 0 after 2 steps
+Right, Left
+Stay, Stay
+Example 3:
+
+Input: steps = 4, arrLen = 2
+Output: 8
+ 
+
+Constraints:
+
+1 <= steps <= 500
+1 <= arrLen <= 106 */
+
+class Solution {
+    int mod = 1000000007;
+
+    /* Recusive approach --> TC:O(steps+len*steps) SC:O(len*steps)
+
+    public int numWays(int steps, int arrLen) {
+        int len = Math.min(steps,arrLen); //to handle space complexity
+        int[][] dp = new int[len+1][steps+1];
+        for(int i=0;i<len;i++)
+            Arrays.fill(dp[i],-1);
+        return (int)(findWays(0,0,steps,len,dp)%mod);
+    }
+
+    public long findWays(int idx,int step,int stepAllow,int arrLen,int[][] dp)
+    {
+        if(step==stepAllow)
+            return (idx==0)?1:0;
+
+        if(idx<0 || idx>=arrLen || step>stepAllow)
+            return 0;
+
+        if(dp[idx][step]!=-1)
+            return dp[idx][step];
+        
+        System.out.println("idx-step"+idx+"-"+step);
+        // go right
+        long r=findWays(idx+1,step+1,stepAllow,arrLen,dp);
+        // go left
+        long l = findWays(idx-1,step+1,stepAllow,arrLen,dp);
+        // stay
+        long s = findWays(idx,step+1,stepAllow,arrLen,dp);
+        dp[idx][step]=(int)((r+l+s)%mod);
+
+        return dp[idx][step];
+    }*/
+
+    //Iterative approch
+    public int numWays(int steps, int arrLen) {
+        int len = Math.min(steps,arrLen);
+        int[][] dp = new int[steps+1][len];
+
+        // 0 steps allowed, and len=1 (idx=0)
+        dp[0][0]=1;
+        // 1 steps allowed, and len=1 (idx=0)
+        dp[1][0]=1;
+
+        for(int i=1;i<=steps;i++) //steps to take
+        {
+            for(int j=0;j<len;j++) //index of array j<len
+            {
+                // action stay: increases the step only
+                dp[i][j]=dp[i-1][j];
+
+                // action right: control will come from left side to current cell, increase step
+                if(j>0)
+                    dp[i][j]=(dp[i][j]+dp[i-1][j-1])%mod;
+
+                 // action left: control will come from right side to current cell, increase step
+                if(j<(len-1))
+                    dp[i][j]=(dp[i][j]+dp[i-1][j+1])%mod;
+            }
+        }
+        // return data after all steps are taken and cursor at 0 index
+        return dp[steps][0];
+    }
+}
