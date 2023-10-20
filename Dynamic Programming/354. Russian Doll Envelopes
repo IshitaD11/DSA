@@ -1,0 +1,78 @@
+/* 354. Russian Doll Envelopes
+
+You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.
+
+One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope's width and height.
+
+Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).
+
+Note: You cannot rotate an envelope.
+
+ 
+
+Example 1:
+
+Input: envelopes = [[5,4],[6,4],[6,7],[2,3]]
+Output: 3
+Explanation: The maximum number of envelopes you can Russian doll is 3 ([2,3] => [5,4] => [6,7]).
+Example 2:
+
+Input: envelopes = [[1,1],[1,1],[1,1]]
+Output: 1
+ 
+
+Constraints:
+
+1 <= envelopes.length <= 105
+envelopes[i].length == 2
+1 <= wi, hi <= 105 */
+
+// try to create the LIS and find suitable lower elements to place in the LIS
+// use binary search to find the lower bound for each element, return lower bound+1 --> where ele needs to be placed
+class Solution {
+    public int maxEnvelopes(int[][] envelopes) {
+        Arrays.sort(envelopes,new Comparator<int[]>(){
+            @Override
+            public int compare(int[] a,int[] b)
+            {
+                if(a[0]==b[0])
+                    return b[1]-a[1]; //sorting in desc, to skip the envelopes with same width
+                return a[0]-b[0];
+            }
+        });
+
+        ArrayList<Integer> lis = new ArrayList<>();
+        lis.add(envelopes[0][1]);
+
+        for(int i=1;i<envelopes.length;i++)
+        {
+            if(envelopes[i][1]>lis.get(lis.size()-1))
+                lis.add(envelopes[i][1]);
+            else
+            {
+                int idx = lowerBoundBinarySearch(lis,envelopes[i][1]);
+                lis.set(idx+1,envelopes[i][1]); //change the values to lower values
+            }
+        }
+        return lis.size();
+    }
+
+    public int lowerBoundBinarySearch(ArrayList<Integer> lis,int ele)
+    {
+        int st=0;
+        int en=lis.size()-1;
+        int ans = -1;
+        while(st<=en)
+        {
+            int mid=st+(en-st)/2;
+            if(lis.get(mid)<ele)
+            {
+                ans=mid;
+                st=mid+1;
+            }
+            else
+                en=mid-1;
+        }
+        return ans;
+    }
+}
