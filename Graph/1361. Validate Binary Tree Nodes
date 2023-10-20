@@ -1,0 +1,97 @@
+/* 1361. Validate Binary Tree Nodes
+
+You have n binary tree nodes numbered from 0 to n - 1 where node i has two children leftChild[i] and rightChild[i], return true if and only if all the given nodes form exactly one valid binary tree.
+
+If node i has no left child then leftChild[i] will equal -1, similarly for the right child.
+
+Note that the nodes have no values and that we only use the node numbers in this problem.
+
+ 
+
+Example 1:
+
+
+Input: n = 4, leftChild = [1,-1,3,-1], rightChild = [2,-1,-1,-1]
+Output: true
+Example 2:
+
+
+Input: n = 4, leftChild = [1,-1,3,-1], rightChild = [2,3,-1,-1]
+Output: false
+Example 3:
+
+
+Input: n = 2, leftChild = [1,0], rightChild = [-1,-1]
+Output: false
+ 
+
+Constraints:
+
+n == leftChild.length == rightChild.length
+1 <= n <= 104
+-1 <= leftChild[i], rightChild[i] <= n - 1 */
+
+// create graph, find out the root node using indeg arr, if any node has indeg>1, not a valid tree. check for disconnected graph, if after visiting all nodes visited array is false for any. BFS/DFS to traverse the graph
+// TC:O(n) SC:O(n+e)
+class Solution {
+    public boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {     
+
+        // create graph & create indeg arr
+        int[] indeg = new int[n];
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for(int i=0;i<n;i++)
+        {
+            graph[i]=new ArrayList<>();
+            if(leftChild[i]!=-1)
+            {    
+                graph[i].add(leftChild[i]);
+                indeg[leftChild[i]]++;
+            }
+            if(rightChild[i]!=-1)
+            {    
+                graph[i].add(rightChild[i]);
+                indeg[rightChild[i]]++;
+            }
+        }
+
+        // find root of the graph & check if 1 child has multiple parent [indeg>1]
+        int root=-1;
+        for(int i=0;i<n;i++)
+        {
+            if(indeg[i]==0)
+                root=i;
+            if(indeg[i]>1)
+                return false;
+        }
+
+        if(root==-1)
+            return false;
+
+        boolean[] visited = new boolean[n];
+        Queue<Integer> q = new LinkedList<>();
+        q.add(root);
+        visited[root]=true;
+
+        while(q.size()>0)
+        {
+            int curr=q.remove();
+            for(int nbr:graph[curr])
+            {
+                if(visited[nbr]==false)
+                {
+                    visited[nbr]=true;
+                    q.add(nbr);
+                }
+                else
+                    return false;    
+            }
+        }
+
+        for(int i=0;i<n;i++)
+        {
+            if(visited[i]==false)
+                return false;
+        }
+        return true;
+    }
+}
